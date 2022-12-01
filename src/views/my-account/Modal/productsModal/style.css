@@ -1,0 +1,16 @@
+.products-data-main{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgb(230, 227, 227);
+    padding: 10px;
+}
+
+.products-data-single{
+    width:48%;
+
+}
+.products-data-single .data-desc{
+padding: 20px;
+    background-color: #f0f4f7;
+}
