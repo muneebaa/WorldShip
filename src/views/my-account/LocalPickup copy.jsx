@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import * as $ from 'jquery'
-import { var_carrier, var_receipt_type } from './constants'
 import { api } from './constants'
 
 import 'react-image-lightbox/style.css' // This only needs to be imported once in your app

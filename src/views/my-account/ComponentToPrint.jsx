@@ -2,6 +2,8 @@ import * as React from 'react'
 import { api } from './constants'
 import * as $ from 'jquery'
 import Barcode from 'react-barcode'
+import BarCode from 'react-barcode'
+import './ComponentToPrint.css'
 const ids = localStorage.getItem('token2')
 
 export class ComponentToPrint extends React.PureComponent {
@@ -59,18 +61,24 @@ export class ComponentToPrint extends React.PureComponent {
 
     return (
       <div className="relativeCSS">
-        <div className="flash" />
-        {this.state.fnsku?.map((item, index) => (
-          <div key={index} style={{ backgroundColor: 'white', margin: '3em' }}>
-            {[...Array(Number(item.fnsku_qty))].map((e, i) => (
-              <>
-                <Barcode value={item.fnsku} />
-                <p>{item.fnsku_title}</p>
-              </>
-            ))}
-            <Barcode value={item.fnsku} />
-          </div>
-        ))}
+        <div className="flash " />
+        <div className="bar-cc">
+          {this.state.fnsku?.map((item, index) => (
+            <div key={index} style={{ backgroundColor: 'white' }}>
+              {[...Array(Number(item.fnsku_qty))].map((e, i) => (
+                <div key={i} className="barcode-main">
+                  <BarCode value={item.fnsku} className="ss" height="50px" />
+                  <p>{item.fnsku_title}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        {/* <Barcode
+          className="ss"
+          value="dasdasndaslndl2"
+          options={{ width: 0.7, height: 20, format: 'CODE128', displayValue: false }}
+        /> */}
       </div>
     )
   }

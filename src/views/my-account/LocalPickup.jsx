@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import * as $ from 'jquery'
 import { api } from './constants'
+import { Select } from './select'
 
 import 'react-image-lightbox/style.css' // This only needs to be imported once in your app
 import {
@@ -261,6 +262,7 @@ function LocalPickup() {
   }
 
   let getStores = `${api}/getStores`
+  let getUserProducts = `${api}/getUserProducts`
 
   useEffect(() => {
     const fetchData = async () => {
@@ -293,6 +295,66 @@ function LocalPickup() {
       } catch (error) {
         console.log(error)
       }
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const addData = {
+        id: localStorage.getItem('token2'),
+      }
+      console.log(localStorage.getItem('token2'))
+      var insertUrl = `${api}/getUserProducts`
+      // this.state.baseUrl +
+      // '/laptopzone/reactcontroller/c_haziqreact/copy_seed'
+      new Promise(function (resolve, reject) {
+        $.ajax({
+          url: insertUrl,
+          dataType: 'json',
+          type: 'POST',
+          data: addData,
+        }).then(
+          function (addData) {
+            resolve(addData)
+          },
+          function (err) {
+            reject(err)
+          },
+        )
+      })
+        .then((result) => {
+          if (result) {
+            console.log(result)
+            console.log('allFormDataBefore--------==========----------', allFormData)
+            setAllFormData((prevState) => ({
+              ...prevState,
+              formValues: [
+                {
+                  title: '',
+                  quantity: '1',
+                  filteredData: result,
+                  isOpen: false,
+                  selectedValue: '',
+                },
+              ],
+            }))
+
+            console.log('allFormData--------==========----------', allFormData)
+
+            // this.setState({ loadData: result })
+            console.log('wklkjkhjkjkhkjhjkhjkhjwq')
+            //alert('Logeed In');
+          } else {
+            // this.setState({ loadData: [] })
+          }
+        })
+        .catch((err) => {
+          // $.LoadingOverlay('hide')
+          // toastr.error('Error', err.message)
+          console.log('111')
+          console.log(err)
+        })
     }
     fetchData()
   }, [])
@@ -374,7 +436,8 @@ function LocalPickup() {
           title="Product Info"
           body={
             <>
-              {allFormData.formValues.map((element, index) => (
+              {console.log(allFormData?.formValues)}
+              {allFormData?.formValues?.map((element, index) => (
                 <CRow key={index} style={{ marginTop: '35px' }}>
                   <CCol md={4}>
                     <CFormLabel htmlFor="exampleFormControlInput1">Title*</CFormLabel>
@@ -382,13 +445,19 @@ function LocalPickup() {
                       type="text"
                       name="title"
                       value={element.title || ''}
+                      onClick={() =>
+                        setAllFormData((prevState) => ({
+                          ...prevState,
+                          isOpen: true,
+                        }))
+                      }
                       onChange={(e) => debounce(quickSearch(index, e))}
                       id="exampleFormControlInput1"
                       placeholder="Title"
                       required
                     />
                     <div className="search-field">
-                      {element.isOpen
+                      {element
                         ? element.filteredData &&
                           element?.filteredData.map((product) => (
                             <p
@@ -406,7 +475,7 @@ function LocalPickup() {
                                 console.log('product.title')
                               }}
                             >
-                              {product.title}
+                              {product.Title}
                             </p>
                           ))
                         : null}

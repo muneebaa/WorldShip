@@ -89,12 +89,12 @@ _nav = [
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
 
-  // {
-  //   component: CNavItem,
-  //   name: 'Use My Address',
-  //   to: '/MyAccount/UseMyAddress',
-  //   icon: <CIcon icon={cilLocationPin} customClassName="nav-icon" />,
-  // },
+  {
+    component: CNavItem,
+    name: 'All Local Pickup',
+    to: '/MyAccount/AllLocalPickup',
+    icon: <CIcon icon={cilLocationPin} customClassName="nav-icon" />,
+  },
 ]
 
 if (is_admin) {
@@ -117,12 +117,12 @@ if (is_admin) {
       to: '/MyAccount/Users',
       icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
     },
-    // {
-    //   component: CNavItem,
-    //   name: 'ShipmentFnsku',
-    //   to: '/MyAccount/ShipmentFnsku/:id',
-    //   icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
-    // },
+    {
+      component: CNavItem,
+      name: 'All Local Pickup',
+      to: '/MyAccount/AllLocalPickup',
+      icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+    },
   ]
 }
 

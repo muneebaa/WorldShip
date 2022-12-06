@@ -122,6 +122,7 @@ function UpdateFnskuLabel({ updateFnskuModal, setUpdateFnskuModal, singleItem })
                 onChange={(e) => setData((prevState) => ({ ...prevState, fnsku: e.target.value }))}
                 id="exampleFormControlInput1"
                 placeholder="Fnsku"
+                maxLength={10}
               />
             </CCol>
           </CRow>

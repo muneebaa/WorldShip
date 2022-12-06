@@ -1,0 +1,17 @@
+.barcode-main{
+    /* margin-top: 40px; */
+     padding-top: 30px
+     /* border: 2px solid rebeccapurple; */
+}
+
+.bar-cc > :nth-child(1){
+    border: 2px solid rgb(255, 255, 255);
+    margin-top: 40px;
+        padding-top: 100px
+}
+
+.bar-cc> :nth-child(2) {
+    /* border: 2px solid rgb(176, 229, 154); */
+    /* margin-top: 40px; */
+    /* padding: 10px */
+}

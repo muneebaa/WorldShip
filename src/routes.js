@@ -27,6 +27,7 @@ const Order = React.lazy(() => import('./views/my-account/Orders'))
 const CreateShipment = React.lazy(() => import('./views/my-account/CreateShipment'))
 const Shipment = React.lazy(() => import('./views/my-account/Shipment'))
 const LocalPickup = React.lazy(() => import('./views/my-account/LocalPickup'))
+const AllLocalPickup = React.lazy(() => import('./views/my-account/AllLocalPickup'))
 const ShipmentFnsku = React.lazy(() => import('./views/my-account/ShipmentFnsku'))
 const WhatsApp = React.lazy(() => import('./views/my-account/WhatsApp'))
 
@@ -105,6 +106,7 @@ const routes = [
   { path: '/MyAccount/CreateShipment', name: 'CreateShipment', component: CreateShipment },
   { path: '/MyAccount/Shipment', name: 'Shipment', component: Shipment },
   { path: '/MyAccount/LocalPickup', name: 'LocalPickup', component: LocalPickup },
+  { path: '/MyAccount/AllLocalPickup', name: 'All Local Pickup', component: AllLocalPickup },
   { path: '/MyAccount/ShipmentFnsku/:id', name: 'ShipmentFnsku', component: ShipmentFnsku },
   { path: '/MyAccount/Users', name: 'Users', component: WhatsApp },
 
