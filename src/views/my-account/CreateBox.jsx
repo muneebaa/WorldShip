@@ -34,7 +34,7 @@ let alertStyles = {
   textAlign: 'center',
 }
 
-function CreateShipment() {
+function CreateBox() {
   const [allFormData, setAllFormData] = useState({
     formValues: [{ title: '', quantity: '1', filteredData: '', isOpen: false, selectedValue: '' }],
     sendValues: [{ title: '', quantity: '1', mpn: '', upc: '', sku: '', product_id: '' }],
@@ -48,6 +48,7 @@ function CreateShipment() {
     showAlert: false,
     alertData: '',
     first_products:"",
+    is_warehouse:0,
 
   })
   const handleInput = (e) => {
@@ -225,7 +226,7 @@ function CreateShipment() {
     console.log('addData', addData)
     console.log(detailsData)
 
-    var insertUrl = `${api}/createUserReceipt`
+    var insertUrl = `${api}/createUserReceiptClone`
 
     new Promise(function (resolve, reject) {
       $.ajax({
@@ -304,9 +305,10 @@ function CreateShipment() {
     const fetchData = async () => {
       const addData = {
         id: localStorage.getItem('token2'),
+        is_warehouse:allFormData.is_warehouse
       }
       console.log(localStorage.getItem('token2'))
-      var insertUrl = `${api}/getUserProductsDropdown`
+      var insertUrl = `${api}/getUserProductsDropdownClone`
       new Promise(function (resolve, reject) {
         $.ajax({
           url: insertUrl,
@@ -370,7 +372,7 @@ function CreateShipment() {
 
       <CForm onSubmit={handleSubmit} enctype="multipart/form-data">
         <Accordion
-          title="Shipment Details"
+          title="Box Details"
           active={1}
           body={
             <CCardBody>
@@ -388,7 +390,7 @@ function CreateShipment() {
                   />
                 </CCol>
                 <CCol md={4}>
-                  <CFormLabel htmlFor="exampleFormControlInput1">Shipment Type*</CFormLabel>
+                  <CFormLabel htmlFor="exampleFormControlInput1">Box Type*</CFormLabel>
                   <div style={{ display: 'block' }}>
                     <CFormSelect
                       name="recipt_type"
@@ -596,4 +598,4 @@ function CreateShipment() {
   )
 }
 
-export default CreateShipment
+export default CreateBox

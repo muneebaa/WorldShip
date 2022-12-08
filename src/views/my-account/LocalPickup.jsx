@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import * as $ from 'jquery'
 import { api } from './constants'
-import { Select } from './select'
 
 import 'react-image-lightbox/style.css' // This only needs to be imported once in your app
 import {
@@ -26,6 +25,7 @@ function LocalPickup() {
   const [allFormData, setAllFormData] = useState({
     formValues: [{ title: '', quantity: '1', filteredData: '', isOpen: false, selectedValue: '' }],
     sendValues: [{ title: '', quantity: '1', mpn: '', upc: '', sku: '', product_id: '' }],
+    first_products:[],
     order_number: '',
     store_id: '',
     remarks: '',
@@ -68,12 +68,16 @@ function LocalPickup() {
       formValues,
     }))
 
+    console.log("iiiiiiiiiiiiiiiiii",e)
+
     let sendValues = allFormData.sendValues
     sendValues[i].title = formValues[i].selectedValue.title
     sendValues[i].mpn = formValues[i].selectedValue.mpn
     sendValues[i].upc = formValues[i].selectedValue.upc
     sendValues[i].sku = formValues[i].selectedValue.sku
     sendValues[i].product_id = formValues[i].selectedValue.product_id
+
+    console.log("product isdididididii",sendValues[i].product_id)
 
     setAllFormData((prevState) => ({
       ...prevState,
@@ -86,7 +90,7 @@ function LocalPickup() {
   function addFormFields() {
     setAllFormData((prevState) => ({
       ...prevState,
-      formValues: [...allFormData.formValues, { title: '', quantity: '1', filteredData: '' }],
+      formValues: [...allFormData.formValues, { title: '', quantity: '1', filteredData: allFormData.first_products }],
     }))
     setAllFormData((prevState) => ({
       ...prevState,
@@ -305,7 +309,7 @@ function LocalPickup() {
         id: localStorage.getItem('token2'),
       }
       console.log(localStorage.getItem('token2'))
-      var insertUrl = `${api}/getUserProducts`
+      var insertUrl = `${api}/getUserProductsDropdown`
       // this.state.baseUrl +
       // '/laptopzone/reactcontroller/c_haziqreact/copy_seed'
       new Promise(function (resolve, reject) {
@@ -326,7 +330,6 @@ function LocalPickup() {
         .then((result) => {
           if (result) {
             console.log(result)
-            console.log('allFormDataBefore--------==========----------', allFormData)
             setAllFormData((prevState) => ({
               ...prevState,
               formValues: [
@@ -339,20 +342,14 @@ function LocalPickup() {
                 },
               ],
             }))
-
-            console.log('allFormData--------==========----------', allFormData)
-
-            // this.setState({ loadData: result })
-            console.log('wklkjkhjkjkhkjhjkhjkhjwq')
-            //alert('Logeed In');
+            setAllFormData(prevState => ({
+              ...prevState,
+              first_products:result
+            }))
           } else {
-            // this.setState({ loadData: [] })
           }
         })
         .catch((err) => {
-          // $.LoadingOverlay('hide')
-          // toastr.error('Error', err.message)
-          console.log('111')
           console.log(err)
         })
     }
@@ -436,7 +433,6 @@ function LocalPickup() {
           title="Product Info"
           body={
             <>
-              {console.log(allFormData?.formValues)}
               {allFormData?.formValues?.map((element, index) => (
                 <CRow key={index} style={{ marginTop: '35px' }}>
                   <CCol md={4}>
@@ -446,10 +442,18 @@ function LocalPickup() {
                       name="title"
                       value={element.title || ''}
                       onClick={() =>
+                      { 
+                        let formValues = allFormData.formValues
+
+                        formValues[index].isOpen = true
+                        console.log("formValues-=-=-=-=-=---=-=--=-==-=-=-=-=-=-=-=- ",formValues)
+                        console.log("formValuesindexxxxxxxxxxxx ",formValues[index])
+
                         setAllFormData((prevState) => ({
                           ...prevState,
-                          isOpen: true,
+                          formValues,
                         }))
+                      }
                       }
                       onChange={(e) => debounce(quickSearch(index, e))}
                       id="exampleFormControlInput1"
@@ -457,16 +461,29 @@ function LocalPickup() {
                       required
                     />
                     <div className="search-field">
-                      {element
+                      {element.isOpen && <p style={{color:"grey", textAlign:"right",marginLeft:"auto",fontSize:"2rem",margin:"5px"}} onClick={() =>
+                                { 
+                                  let formValues = allFormData.formValues
+
+                                  formValues[index].isOpen = false
+                                  
+                                  setAllFormData((prevState) => ({
+                                    ...prevState,
+                                    formValues,
+                                  }))
+                                }
+                                }>x</p>}
+                    
+                      {element.isOpen
                         ? element.filteredData &&
                           element?.filteredData.map((product) => (
-                            <p
-                              key={product.id}
+                            <div  key={product.id} >
+                              
+                               <p
                               name="title"
                               onClick={(e) => {
                                 handleTitle(index, product)
                                 let formValues = allFormData.formValues
-
                                 formValues[index].isOpen = false
                                 setAllFormData((prevState) => ({
                                   ...prevState,
@@ -475,8 +492,11 @@ function LocalPickup() {
                                 console.log('product.title')
                               }}
                             >
-                              {product.Title}
+                              
+                              {product.title}
                             </p>
+                            </div>  
+                           
                           ))
                         : null}
                     </div>

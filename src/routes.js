@@ -26,6 +26,8 @@ const Order = React.lazy(() => import('./views/my-account/Orders'))
 
 const CreateShipment = React.lazy(() => import('./views/my-account/CreateShipment'))
 const Shipment = React.lazy(() => import('./views/my-account/Shipment'))
+const Box = React.lazy(() => import('./views/my-account/Box'))
+const CreateBox = React.lazy(() => import('./views/my-account/CreateBox'))
 const LocalPickup = React.lazy(() => import('./views/my-account/LocalPickup'))
 const AllLocalPickup = React.lazy(() => import('./views/my-account/AllLocalPickup'))
 const ShipmentFnsku = React.lazy(() => import('./views/my-account/ShipmentFnsku'))
@@ -105,6 +107,8 @@ const routes = [
   { path: '/MyAccount/CreateOrder', name: 'Create Order', component: CreateOrder },
   { path: '/MyAccount/CreateShipment', name: 'CreateShipment', component: CreateShipment },
   { path: '/MyAccount/Shipment', name: 'Shipment', component: Shipment },
+  { path: '/MyAccount/CreateBox', name: 'CreateBox', component: CreateBox },
+  { path: '/MyAccount/Box', name: 'Box', component: Box },
   { path: '/MyAccount/LocalPickup', name: 'LocalPickup', component: LocalPickup },
   { path: '/MyAccount/AllLocalPickup', name: 'All Local Pickup', component: AllLocalPickup },
   { path: '/MyAccount/ShipmentFnsku/:id', name: 'ShipmentFnsku', component: ShipmentFnsku },

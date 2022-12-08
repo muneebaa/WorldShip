@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import * as $ from 'jquery'
 
 import 'react-image-lightbox/style.css' // This only needs to be imported once in your app
@@ -31,6 +31,7 @@ function CreateOrder() {
     sendValues: [{ title: '', quantity: '1', mpn: '', upc: '', sku: '', product_id: '' }],
     visible: true,
     firstName: '',
+    first_products:"",
     lastName: '',
     contact: '',
     email: '',
@@ -100,7 +101,7 @@ function CreateOrder() {
   function addFormFields() {
     setAllFormData((prevState) => ({
       ...prevState,
-      formValues: [...allFormData.formValues, { title: '', quantity: '1', filteredData: '' }],
+      formValues: [...allFormData.formValues, { title: '', quantity: '1', filteredData: allFormData.first_products }],
     }))
     setAllFormData((prevState) => ({
       ...prevState,
@@ -368,6 +369,60 @@ function CreateOrder() {
       timeout = setTimeout(fn.bind(currentScope, ...args), delay)
     }
   }
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const addData = {
+        id: localStorage.getItem('token2'),
+      }
+      console.log(localStorage.getItem('token2'))
+      var insertUrl = `${api}/getUserProductsDropdown`
+      new Promise(function (resolve, reject) {
+        $.ajax({
+          url: insertUrl,
+          dataType: 'json',
+          type: 'POST',
+          data: addData,
+        }).then(
+          function (addData) {
+            resolve(addData)
+          },
+          function (err) {
+            reject(err)
+          },
+        )
+      })
+        .then((result) => {
+          if (result) {
+            console.log(result)
+            setAllFormData((prevState) => ({
+              ...prevState,
+              formValues: [
+                {
+                  title: '',
+                  quantity: '1',
+                  filteredData: result,
+                  isOpen: false,
+                  selectedValue: '',
+                },
+              ],
+              
+            }))
+            setAllFormData(prevState => ({
+              ...prevState,
+              first_products:result
+            }))
+          } else {
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    fetchData()
+  }, [])
+
   return (
     <>
       {allFormData.showAlert && (
@@ -715,12 +770,38 @@ function CreateOrder() {
                       type="text"
                       name="title"
                       value={element.title || ''}
+                      onClick={() =>
+                        { 
+                          let formValues = allFormData.formValues
+  
+                          formValues[index].isOpen = true
+  
+                          setAllFormData((prevState) => ({
+                            ...prevState,
+                            formValues,
+                          }))
+                        }
+                        }
                       onChange={(e) => debounce(quickSearch(index, e))}
                       id="exampleFormControlInput1"
                       placeholder="Title"
                       required
                     />
                     <div className="search-field">
+                    {element.isOpen && <p style={{color:"grey", textAlign:"right",marginLeft:"auto",fontSize:"2rem",margin:"5px"}} onClick={() =>
+                                { 
+                                  let formValues = allFormData.formValues
+
+                                  formValues[index].isOpen = false
+                                  console.log("formValues-=-=-=-=-=---=-=--=-==-=-=-=-=-=-=-=- ",formValues)
+                                  console.log("formValuesindexxxxxxxxxxxx ",formValues[index])
+
+                                  setAllFormData((prevState) => ({
+                                    ...prevState,
+                                    formValues,
+                                  }))
+                                }
+                                }>x</p>}
                       {element.isOpen
                         ? element.filteredData &&
                           element?.filteredData.map((product) => (

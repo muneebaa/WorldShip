@@ -78,6 +78,18 @@ _nav = [
   },
   {
     component: CNavItem,
+    name: 'Box',
+    to: '/MyAccount/Box',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'CreateBox',
+    to: '/MyAccount/CreateBox',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
     name: 'Shipment',
     to: '/MyAccount/Shipment',
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
