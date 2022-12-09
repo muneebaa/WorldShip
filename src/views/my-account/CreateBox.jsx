@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import * as $ from 'jquery'
 import { var_carrier, var_receipt_type } from './constants'
 import { api } from './constants'
@@ -13,6 +13,7 @@ import {
   CFormInput,
   CButton,
   CFormSelect,
+  CFormSwitch,
 } from '@coreui/react-pro'
 
 import Accordion from '../base/accordion/Accordion'
@@ -47,9 +48,9 @@ function CreateBox() {
     remarks: '',
     showAlert: false,
     alertData: '',
-    first_products:"",
-    is_warehouse:0,
-
+    first_products: '',
+    is_warehouse: false,
+    is_partial: false,
   })
   const handleInput = (e) => {
     const name = e.target.name
@@ -103,7 +104,10 @@ function CreateBox() {
   function addFormFields() {
     setAllFormData((prevState) => ({
       ...prevState,
-      formValues: [...allFormData.formValues, { title: '', quantity: '1', filteredData: allFormData.first_products}],
+      formValues: [
+        ...allFormData.formValues,
+        { title: '', quantity: '1', filteredData: allFormData.first_products },
+      ],
     }))
     setAllFormData((prevState) => ({
       ...prevState,
@@ -305,7 +309,7 @@ function CreateBox() {
     const fetchData = async () => {
       const addData = {
         id: localStorage.getItem('token2'),
-        is_warehouse:allFormData.is_warehouse
+        is_warehouse: allFormData.is_warehouse === true ? 1 : 0,
       }
       console.log(localStorage.getItem('token2'))
       var insertUrl = `${api}/getUserProductsDropdownClone`
@@ -338,11 +342,10 @@ function CreateBox() {
                   selectedValue: '',
                 },
               ],
-              
             }))
-            setAllFormData(prevState => ({
+            setAllFormData((prevState) => ({
               ...prevState,
-              first_products:result
+              first_products: result,
             }))
           } else {
           }
@@ -352,7 +355,11 @@ function CreateBox() {
         })
     }
     fetchData()
-  }, [])
+    setAllFormData((prevState) => ({
+      ...prevState,
+      tracking_number: allFormData.is_warehouse ? 1 : 0,
+    }))
+  }, [allFormData.is_warehouse])
 
   return (
     <div>
@@ -376,6 +383,28 @@ function CreateBox() {
           active={1}
           body={
             <CCardBody>
+              <CFormSwitch
+                label="Ware House"
+                id="formSwitchCheckChecked"
+                value={allFormData.is_warehouse}
+                onClick={() =>
+                  setAllFormData((prevState) => ({
+                    ...prevState,
+                    is_warehouse: !allFormData.is_warehouse,
+                  }))
+                }
+              />
+              <CFormSwitch
+                label="Partial Shipment"
+                id="formSwitchCheckChecked"
+                value={allFormData.is_warehouse}
+                onClick={() =>
+                  setAllFormData((prevState) => ({
+                    ...prevState,
+                    is_warehouse: !allFormData.is_warehouse,
+                  }))
+                }
+              />
               <CRow>
                 <CCol md={4}>
                   <CFormLabel htmlFor="exampleFormControlInput1">Description*</CFormLabel>
@@ -410,7 +439,7 @@ function CreateBox() {
                     </CFormSelect>
                   </div>
                 </CCol>
-                <CCol md={4}>
+                <CCol md={4} style={{ display: allFormData.is_warehouse ? 'none' : 'block' }}>
                   <CFormLabel htmlFor="exampleFormControlInput1">Carrier*</CFormLabel>
                   <CFormSelect
                     name="carrier"
@@ -445,7 +474,8 @@ function CreateBox() {
                     />
                   </CCol>
                 )}
-                <CCol md={4}>
+                {}
+                <CCol md={4} style={{ display: allFormData.is_warehouse ? 'none' : 'block' }}>
                   <CFormLabel htmlFor="exampleFormControlInput1">Tracking Number*</CFormLabel>
                   <CFormInput
                     type="text"
@@ -485,35 +515,44 @@ function CreateBox() {
                       type="text"
                       name="title"
                       value={element.title || ''}
-                      onClick={() =>
-                        { 
-                          let formValues = allFormData.formValues
-  
-                          formValues[index].isOpen = true
-  
-                          setAllFormData((prevState) => ({
-                            ...prevState,
-                            formValues,
-                          }))
-                        }
-                        }
+                      onClick={() => {
+                        let formValues = allFormData.formValues
+
+                        formValues[index].isOpen = true
+
+                        setAllFormData((prevState) => ({
+                          ...prevState,
+                          formValues,
+                        }))
+                      }}
                       onChange={(e) => debounce(quickSearch(index, e))}
                       id="exampleFormControlInput1"
                       placeholder="Title"
                       required
                     />
                     <div className="search-field">
-                    {element.isOpen && <p style={{color:"grey", textAlign:"right",marginLeft:"auto",fontSize:"2rem",margin:"5px"}} onClick={() =>
-                                { 
-                                  let formValues = allFormData.formValues
+                      {element.isOpen && (
+                        <p
+                          style={{
+                            color: 'grey',
+                            textAlign: 'right',
+                            marginLeft: 'auto',
+                            fontSize: '2rem',
+                            margin: '5px',
+                          }}
+                          onClick={() => {
+                            let formValues = allFormData.formValues
 
-                                  formValues[index].isOpen = false
-                                  setAllFormData((prevState) => ({
-                                    ...prevState,
-                                    formValues,
-                                  }))
-                                }
-                                }>x</p>}
+                            formValues[index].isOpen = false
+                            setAllFormData((prevState) => ({
+                              ...prevState,
+                              formValues,
+                            }))
+                          }}
+                        >
+                          x
+                        </p>
+                      )}
                       {element.isOpen
                         ? element.filteredData &&
                           element?.filteredData.map((product) => (
