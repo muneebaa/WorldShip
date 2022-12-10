@@ -69,7 +69,6 @@ function CreateBox() {
     }))
     let sendValues = allFormData.sendValues
     sendValues[i][e.target.name] = e.target.value
-    console.log(' sendValues[i][e.target.name]', sendValues[i][e.target.name])
     setAllFormData((prevState) => ({
       ...prevState,
       sendValues,
@@ -141,14 +140,7 @@ function CreateBox() {
       ...prevState,
       formValues,
     }))
-
-    let url
-
-    if (allFormData.is_warehouse) {
-      url = `${api}/findProductsClone`
-    } else {
-      url = `${api}/findProducts`
-    }
+    let url = `${api}/findProducts`
 
     const formData = new FormData()
     formData.append('title', e.target.value)
@@ -289,7 +281,6 @@ function CreateBox() {
             // showAlert: false,
             // alertData: '',
           }))
-          window.location.reload(false)
         } else {
           console.log('byee')
         }
@@ -370,7 +361,7 @@ function CreateBox() {
     fetchData()
     setAllFormData((prevState) => ({
       ...prevState,
-      tracking_number: allFormData.is_warehouse ? 0 : !allFormData.is_partial ? null : ' ',
+      tracking_number: allFormData.is_warehouse ? 0 : !allFormData.is_partial ? null : 1,
       carrier: allFormData.is_warehouse ? 'none' : null,
     }))
   }, [allFormData.is_warehouse])
@@ -411,19 +402,17 @@ function CreateBox() {
                 />
               )}
 
-              {!allFormData.is_warehouse && (
-                <CFormSwitch
-                  label="Partial Shipment"
-                  id="formSwitchCheckChecked"
-                  value={allFormData.is_warehouse}
-                  onClick={() =>
-                    setAllFormData((prevState) => ({
-                      ...prevState,
-                      is_partial: !allFormData.is_partial,
-                    }))
-                  }
-                />
-              )}
+              <CFormSwitch
+                label="Partial Shipment"
+                id="formSwitchCheckChecked"
+                value={allFormData.is_warehouse}
+                onClick={() =>
+                  setAllFormData((prevState) => ({
+                    ...prevState,
+                    is_partial: !allFormData.is_partial,
+                  }))
+                }
+              />
               <CRow>
                 <CCol md={4}>
                   <CFormLabel htmlFor="exampleFormControlInput1">Description*</CFormLabel>
@@ -537,10 +526,7 @@ function CreateBox() {
                         let formValues = allFormData.formValues
 
                         formValues[index].isOpen = true
-                        console.log(
-                          'product.ELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENTELEMENT',
-                          element,
-                        )
+
                         setAllFormData((prevState) => ({
                           ...prevState,
                           formValues,
@@ -548,7 +534,7 @@ function CreateBox() {
                       }}
                       onChange={(e) => debounce(quickSearch(index, e))}
                       id="exampleFormControlInput1"
-                      placeholder="Select Product from Placeholder"
+                      placeholder="Title"
                       required
                     />
                     <div className="search-field">
@@ -585,20 +571,11 @@ function CreateBox() {
                                 let formValues = allFormData.formValues
 
                                 formValues[index].isOpen = false
-
-                                formValues[index].quantity =
-                                  allFormData.is_warehouse && element.selectedValue.received_qty
-                                    ? element?.selectedValue.received_qty
-                                    : 1
-
                                 setAllFormData((prevState) => ({
                                   ...prevState,
                                   formValues,
                                 }))
-                                console.log(
-                                  'product.titletitletitletitletitletitletitletitle',
-                                  element,
-                                )
+                                console.log('product.title')
                               }}
                             >
                               {product.title}
@@ -612,27 +589,12 @@ function CreateBox() {
                     <CFormInput
                       type="number"
                       name="quantity"
-                      value={element.quantity}
+                      value={element.quantity || ''}
                       onChange={(e) => handleChange(index, e)}
-                      onClick={() => {
-                        console.log('QuantityElement', element)
-                        console.log(
-                          'element.selectedValue.received_qty',
-                          element.selectedValue.received_qty,
-                        )
-                      }}
                       id="exampleFormControlInput1"
                       placeholder="Quantity"
                       required
                       min={1}
-                      // max={
-                      //   allFormData.is_warehouse
-                      //     ? element.selectedValue.received_qty === 'undefined'
-                      //       ? null
-                      //       :  element.selectedValue.received_qty
-                      //     : null
-                      // }
-                      max={element?.selectedValue?.received_qty}
                     />
                   </CCol>
                   <CCol md={2}>

@@ -125,6 +125,12 @@ if (is_admin) {
     },
     {
       component: CNavItem,
+      name: 'Box',
+      to: '/MyAccount/Box',
+      icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
       name: 'Users',
       to: '/MyAccount/Users',
       icon: <CIcon icon={cilCart} customClassName="nav-icon" />,

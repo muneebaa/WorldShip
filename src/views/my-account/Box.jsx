@@ -216,6 +216,8 @@ const Box = () => {
                   },
                   'Receipt_id',
                   'Client',
+                  'Is_partial',
+                  'Is_warehouse',
                   'Carrier_name',
                   'Description',
                   'Recipt_type',
@@ -279,59 +281,89 @@ const Box = () => {
                               display: 'flex',
                             }}
                           >
-                            {items.Status === 'Received' ||
-                            items.Status === 'shipped' ||
-                            items.Status === 'Print Label' ||
-                            items.Status === 'Awaiting Label' ||
-                            items.Status === 'Add Dimension' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="set status to received">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => {
-                                      showReceivedModal(items)
-                                    }}
-                                  >
-                                    Received
-                                  </CButton>
-                                </CTooltip>
-                              </div>
-                            )}
-                            {items.Status === 'shipped' ||
-                            items.Status === 'Print Label' ||
-                            items.Status === 'Awaiting Label' ||
-                            items.Status === 'Add Dimension' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="product receipt">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => showProductModal(items)}
-                                  >
-                                    Products
-                                  </CButton>
-                                </CTooltip>
-                              </div>
-                            )}
-                            {items.Status === 'shipped' || items.Status === 'Print Label' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="enter dimensions">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => showDimensionsModal(items)}
-                                  >
-                                    Dimensions
-                                  </CButton>
-                                </CTooltip>
-                              </div>
-                            )}
+                            <div style={{ display: 'flex' }}>
+                              {items.Is_partial === '0' && (
+                                <>
+                                  {items.Status === 'Received' ||
+                                  items.Status === 'shipped' ||
+                                  items.Status === 'Print Label' ||
+                                  items.Status === 'Awaiting Label' ||
+                                  items.Status === 'Add Dimension' ? null : (
+                                    <div style={{ margin: '0 .5em' }}>
+                                      <CTooltip content="set status to received">
+                                        <CButton
+                                          color="success"
+                                          shape="square"
+                                          size="sm"
+                                          onClick={() => {
+                                            showReceivedModal(items)
+                                          }}
+                                        >
+                                          Received
+                                        </CButton>
+                                      </CTooltip>
+                                    </div>
+                                  )}
+                                  {items.Status === 'shipped' ||
+                                  items.Status === 'Print Label' ||
+                                  items.Status === 'Awaiting Label' ||
+                                  items.Status === 'Add Dimension' ? null : (
+                                    <div style={{ margin: '0 .5em' }}>
+                                      <CTooltip content="product receipt">
+                                        <CButton
+                                          color="success"
+                                          shape="square"
+                                          size="sm"
+                                          onClick={() => showProductModal(items)}
+                                        >
+                                          Products
+                                        </CButton>
+                                      </CTooltip>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </div>
 
-                            {items.Status === 'shipped' ? null : items.Fba_label_path ? (
+                            <div style={{ display: 'flex' }}>
+                              {items.Is_partial === '1' && (
+                                <>
+                                  {items.Status === 'shipped' ||
+                                  items.Status === 'Print Label' ? null : (
+                                    <div style={{ margin: '0 .5em' }}>
+                                      <CTooltip content="enter dimensions">
+                                        <CButton
+                                          color="success"
+                                          shape="square"
+                                          size="sm"
+                                          onClick={() => showDimensionsModal(items)}
+                                        >
+                                          Dimensions
+                                        </CButton>
+                                      </CTooltip>
+                                    </div>
+                                  )}
+
+                                  {items.Status === 'shipped' ? null : (
+                                    <div style={{ margin: '0 .5em' }}>
+                                      <CTooltip content="set status to shipped">
+                                        <CButton
+                                          color="success"
+                                          shape="square"
+                                          size="sm"
+                                          onClick={() => showShippedModal(items)}
+                                        >
+                                          Shipped
+                                        </CButton>
+                                      </CTooltip>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </div>
+
+                            {items.Status === null ||
+                            items.Status === 'shipped' ? null : items.Fba_label_path ? (
                               <div style={{ margin: '0 .5em' }}>
                                 <CTooltip content="Print FBA Label">
                                   <CButton
@@ -348,7 +380,9 @@ const Box = () => {
                                 </CTooltip>
                               </div>
                             ) : null}
-                            {items.Status === 'shipped' ? null : items.Fsnku_Path ? (
+
+                            {items.Status === null ||
+                            items.Status === 'shipped' ? null : items.Fsnku_Path ? (
                               <div style={{ margin: '0 .5em' }}>
                                 <CTooltip content="Show FNSKU">
                                   <Link to={`ShipmentFnsku/${items.Receipt_id}`}>
@@ -371,57 +405,47 @@ const Box = () => {
                                 </CTooltip>
                               </div>
                             ) : null}
-                            {items.Status === 'shipped' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="set status to shipped">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => showShippedModal(items)}
-                                  >
-                                    Shipped
-                                  </CButton>
-                                </CTooltip>
-                              </div>
-                            )}
                           </div>
                         ) : (
                           <div style={{ display: 'flex' }}>
-                            {items.Status === 'shipped' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="set label">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => showFbaModal(items)}
-                                  >
-                                    FBA
-                                  </CButton>
-                                </CTooltip>
-                              </div>
-                            )}
+                            {items.Is_partial === '0' && (
+                              <>
+                                {items.Status === 'shipped' ? null : (
+                                  <div style={{ margin: '0 .5em' }}>
+                                    <CTooltip content="set label">
+                                      <CButton
+                                        color="success"
+                                        shape="square"
+                                        size="sm"
+                                        onClick={() => showFbaModal(items)}
+                                      >
+                                        FBA
+                                      </CButton>
+                                    </CTooltip>
+                                  </div>
+                                )}
 
-                            {items.Status === 'shipped' ? null : (
-                              <div style={{ margin: '0 .5em' }}>
-                                <CTooltip content="set label">
-                                  <CButton
-                                    color="success"
-                                    shape="square"
-                                    size="sm"
-                                    onClick={() => {
-                                      setAllData((prevState) => ({
-                                        ...prevState,
-                                        showFnskuButton: true,
-                                      }))
-                                      showFnskuModal(items)
-                                    }}
-                                  >
-                                    FNSKU
-                                  </CButton>
-                                </CTooltip>
-                              </div>
+                                {items.Status === 'shipped' ? null : (
+                                  <div style={{ margin: '0 .5em' }}>
+                                    <CTooltip content="set label">
+                                      <CButton
+                                        color="success"
+                                        shape="square"
+                                        size="sm"
+                                        onClick={() => {
+                                          setAllData((prevState) => ({
+                                            ...prevState,
+                                            showFnskuButton: true,
+                                          }))
+                                          showFnskuModal(items)
+                                        }}
+                                      >
+                                        FNSKU
+                                      </CButton>
+                                    </CTooltip>
+                                  </div>
+                                )}
+                              </>
                             )}
                           </div>
                         )}
